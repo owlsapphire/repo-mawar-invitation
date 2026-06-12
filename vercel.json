@@ -1,0 +1,16 @@
+{
+  "rewrites": [
+    {
+      "source": "/rsvp",
+      "destination": "https://digiowlinvitation.site/public/rsvp/"
+    },
+    {
+      "source": "/public/rsvp/:path*",
+      "destination": "https://digiowlinvitation.site/public/rsvp/:path*"
+    },
+    {
+      "source": "/api/:path*",
+      "destination": "https://digiowlinvitation.site/api/:path*"
+    }
+  ]
+}
