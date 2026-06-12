@@ -5,6 +5,10 @@
       "destination": "https://digiowlinvitation.site/public/rsvp/"
     },
     {
+      "source": "/public/rsvp",
+      "destination": "https://digiowlinvitation.site/public/rsvp/"
+    },
+    {
       "source": "/public/rsvp/:path*",
       "destination": "https://digiowlinvitation.site/public/rsvp/:path*"
     },
