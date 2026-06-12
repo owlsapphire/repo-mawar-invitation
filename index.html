@@ -2,104 +2,21 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Katalog Reseller - DigiOwl Partner</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f3c5d8; /* Pink coquette brand lu */
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
-        }
+    <title>Menuju Undangan...</title>
+    <script>
+        // Mengambil parameter nama tamu (?to=...) dari URL reseller
+        const urlParams = window.location.search;
         
-        /* Box Katalog Bergaya Neo-Brutalist */
-        .catalog-card {
-            background: #ffffff;
-            width: 340px;
-            border: 4px solid #1c2033;
-            border-radius: 24px;
-            padding: 24px;
-            box-shadow: 8px 8px 0px #1c2033;
-            text-align: center;
-        }
-
-        .thumbnail-placeholder {
-            width: 100%;
-            height: 200px;
-            background-color: #5db5d9; /* Biru khas brand lu */
-            border: 3px solid #1c2033;
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            color: white;
-            font-size: 20px;
-            margin-bottom: 20px;
-        }
-
-        h1 {
-            color: #1c2033;
-            font-size: 22px;
-            margin: 0 0 10px 0;
-        }
-
-        p {
-            color: #1c2033;
-            font-size: 14px;
-            margin-bottom: 20px;
-            opacity: 0.8;
-        }
-
-        /* Tombol Utama */
-        .btn-demo {
-            display: inline-block;
-            width: 100%;
-            padding: 14px 0;
-            background-color: #e390ba; /* Hot Pink brand lu */
-            color: #1c2033;
-            font-weight: bold;
-            text-decoration: none;
-            border: 3px solid #1c2033;
-            border-radius: 12px;
-            box-shadow: 4px 4px 0px #1c2033;
-            transition: all 0.2s;
-            cursor: pointer;
-        }
-
-        .btn-demo:active {
-            transform: translate(4px, 4px);
-            box-shadow: 0px 0px 0px #1c2033;
-        }
-    </style>
+        // Link target asli dari vendor lu
+        const targetVendor = "https://digiowlinvitation.site/tiwi-usamah/";
+        
+        // Menggabungkan link vendor dengan nama tamu, lalu otomatis redirect kilat
+        window.location.href = targetVendor + urlParams;
+    </script>
 </head>
 <body>
-
-    <div class="catalog-card">
-        <!-- Nanti ini bisa diganti gambar screenshot tema undangan asli vendor lu -->
-        <div class="thumbnail-placeholder">🌙 MOONLIT</div>
-        
-        <h1>Tema: Moonlit Cascade</h1>
-        <p>Desain premium, elegan, cocok buat konsep pernikahan malam bertabur bintang.</p>
-
-        <!-- Tombol samaran yang mengarah ke fungsi redirect script -->
-        <a href="#" class="btn-demo" onclick="bukaDemo(event)">✨ Lihat Demo Undangan ✨</a>
-    </div>
-
-    <script>
-        function bukaDemo(e) {
-            e.preventDefault();
-            
-            // Script ini bakal ngebuka tab baru langsung ke target vendor
-            // Di mata pembeli, link awalnya tetep berasal dari klik di web reseller lu
-            window.open("https://digiowlinvitation.site/moonlit-cascade-tf/?to=Nama+Tamu", "_blank");
-        }
-    </script>
-
+    <p style="text-align: center; font-family: sans-serif; margin-top: 50px; color: #1c2033;">
+        Loading Wedding Invitation...
+    </p>
 </body>
 </html>
