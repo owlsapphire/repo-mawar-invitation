@@ -3,13 +3,161 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Henna Wedding Invitation</title>
+    <title>Dashboard Pantau RSVP & Ucapan</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { font-family: sans-serif; text-align: center; margin-top: 100px; background-color: #f3c5d8; color: #1c2033; }
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        html, body { 
+            margin: 0; 
+            padding: 0; 
+            width: 100%; 
+            height: 100%; 
+            background-color: #fddde6; /* Background pink coquette */
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Header Dashboard Nuansa Pink Mewah */
+        .dashboard-header {
+            background-color: #ffffff;
+            border-bottom: 4px solid #1c2033;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 0px rgba(28, 32, 51, 0.1);
+            z-index: 99;
+        }
+
+        .brand-zone {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-logo {
+            width: 35px;
+            height: 35px;
+            background-color: #e390ba; /* Pink cerah */
+            border: 2px solid #1c2033;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #1c2033;
+            font-size: 16px;
+        }
+
+        .brand-name {
+            font-weight: bold;
+            font-size: 16px;
+            color: #1c2033;
+            letter-spacing: 0.5px;
+        }
+
+        .info-badge {
+            background-color: #fff0f5;
+            border: 2px solid #1c2033;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            color: #1c2033;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Container Frame Utama */
+        .frame-body {
+            flex: 1;
+            width: 100%;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .window-box {
+            width: 100%;
+            max-width: 650px;
+            height: 100%;
+            background: #ffffff;
+            border: 4px solid #1c2033;
+            border-radius: 24px;
+            box-shadow: 8px 8px 0px #1c2033;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Bar Judul Window Ala Retro Imut */
+        .window-bar {
+            background: #e390ba;
+            padding: 10px 15px;
+            border-bottom: 4px solid #1c2033;
+            color: #1c2033;
+            font-weight: bold;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Konten Halaman Vendor */
+        .content-area {
+            flex: 1;
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        object {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        @media screen and (max-width: 480px) {
+            .brand-name { font-size: 14px; }
+            .info-badge { font-size: 11px; padding: 4px 10px; }
+            .frame-body { padding: 10px; }
+        }
     </style>
 </head>
 <body>
-    <h1>✨ Henna Wedding Invitation Digital ✨</h1>
-    <p>Website resmi reseller resmi DigiOwl.</p>
+
+    <div class="dashboard-header">
+        <div class="brand-zone">
+            <div class="brand-logo">
+                <i class="fas fa-heart"></i>
+            </div>
+            <div class="brand-name">HENNA WEDDING RESELLER</div>
+        </div>
+        <div class="info-badge">
+            <i class="fas fa-lock"></i> Default Password: 123456
+        </div>
+    </div>
+
+    <div class="frame-body">
+        <div class="window-box">
+            <div class="window-bar">
+                <i class="fas fa-desktop"></i> PANTAU KEHADIRAN & UCAPAN TAMU
+            </div>
+            <div class="content-area">
+                <object id="rsvpObject" type="text/html"></object>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tangkap parameter (?id=151998) dari URL reseller lu
+        const urlParams = window.location.search;
+        const objectElem = document.getElementById('rsvpObject');
+        
+        // Muat sistem asli milik vendor ke dalam frame
+        objectElem.data = "https://digiowlinvitation.site/public/rsvp/" + urlParams;
+    </script>
 </body>
 </html>
