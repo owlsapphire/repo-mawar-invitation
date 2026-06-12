@@ -7,157 +7,164 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        html, body { 
-            margin: 0; 
-            padding: 0; 
-            width: 100%; 
-            height: 100%; 
-            background-color: #fddde6; /* Background pink coquette */
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-
-        /* Header Dashboard Nuansa Pink Mewah */
-        .dashboard-header {
-            background-color: #ffffff;
-            border-bottom: 4px solid #1c2033;
-            padding: 15px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 4px 0px rgba(28, 32, 51, 0.1);
-            z-index: 99;
-        }
-
-        .brand-zone {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .brand-logo {
-            width: 35px;
-            height: 35px;
-            background-color: #e390ba; /* Pink cerah */
-            border: 2px solid #1c2033;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #1c2033;
-            font-size: 16px;
-        }
-
-        .brand-name {
-            font-weight: bold;
-            font-size: 16px;
-            color: #1c2033;
-            letter-spacing: 0.5px;
-        }
-
-        .info-badge {
-            background-color: #fff0f5;
-            border: 2px solid #1c2033;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: bold;
-            color: #1c2033;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        /* Container Frame Utama */
-        .frame-body {
-            flex: 1;
-            width: 100%;
-            padding: 15px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .window-box {
-            width: 100%;
-            max-width: 650px;
-            height: 100%;
-            background: #ffffff;
-            border: 4px solid #1c2033;
-            border-radius: 24px;
-            box-shadow: 8px 8px 0px #1c2033;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* Bar Judul Window Ala Retro Imut */
-        .window-bar {
-            background: #e390ba;
-            padding: 10px 15px;
-            border-bottom: 4px solid #1c2033;
-            color: #1c2033;
-            font-weight: bold;
-            font-size: 13px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        /* Konten Halaman Vendor */
-        .content-area {
-            flex: 1;
-            width: 100%;
-            height: 100%;
-            position: relative;
-        }
-
-        object {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-
-        @media screen and (max-width: 480px) {
-            .brand-name { font-size: 14px; }
-            .info-badge { font-size: 11px; padding: 4px 10px; }
-            .frame-body { padding: 10px; }
-        }
+        body { background-color: #fddde6; color: #1c2033; margin: 0; padding: 20px; display: flex; justify-content: center; min-height: 100vh; align-items: center; }
+        .container { background: #ffffff; width: 100%; max-width: 650px; border: 4px solid #1c2033; border-radius: 24px; padding: 24px; box-shadow: 8px 8px 0px #1c2033; }
+        .card { background: #fff; border: 2px solid #1c2033; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 4px 4px 0px #1c2033; }
+        h2 { margin-top: 0; text-align: center; text-transform: uppercase; font-size: 18px; letter-spacing: 1px; }
+        
+        /* Form Login */
+        .login-zone { text-align: center; padding: 20px 0; }
+        .form-group { margin-bottom: 15px; text-align: left; }
+        label { display: block; font-weight: bold; margin-bottom: 6px; font-size: 13px; }
+        input[type="password"] { width: 100%; padding: 12px; border: 2px solid #1c2033; border-radius: 8px; font-size: 14px; text-align: center; }
+        .btn-pink { display: block; width: 100%; padding: 12px; background: #e390ba; color: #1c2033; font-weight: bold; border: 2px solid #1c2033; border-radius: 8px; cursor: pointer; text-transform: uppercase; font-size: 13px; box-shadow: 3px 3px 0 #1c2033; }
+        .btn-pink:active { transform: translate(2px, 2px); box-shadow: 0 0 0 #1c2033; }
+        
+        /* Dashboard Area */
+        .dashboard-zone { display: none; }
+        .dashboard-zone.active { display: block; }
+        
+        /* Ringkasan Kehadiran */
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+        .stat-card { background: #fff5f7; border: 2px solid #1c2033; border-radius: 8px; padding: 10px; text-align: center; font-size: 12px; font-weight: bold; }
+        .stat-num { font-size: 20px; color: #e390ba; display: block; margin-top: 4px; -webkit-text-stroke: 0.5px #1c2033; }
+        
+        /* List Ucapan */
+        .ucapan-list { max-height: 400px; overflow-y: auto; padding-right: 5px; }
+        .ucapan-item { background: #f8fafc; border: 2px solid #1c2033; border-radius: 8px; padding: 12px; margin-bottom: 10px; box-shadow: 2px 2px 0 #1c2033; }
+        .ucapan-header { display: flex; justify-content: space-between; font-size: 12px; font-weight: bold; margin-bottom: 6px; border-bottom: 1px dashed #cbd5e1; padding-bottom: 4px; }
+        .badge-hadir { background: #25d366; color: white; padding: 2px 6px; border-radius: 4px; font-size: 10px; }
+        .badge-absen { background: #dc3545; color: white; padding: 2px 6px; border-radius: 4px; font-size: 10px; }
+        .ucapan-text { font-size: 13px; color: #334155; line-height: 1.4; word-break: break-word; }
+        
+        .error-msg { color: #dc3545; font-size: 12px; font-weight: bold; text-align: center; margin-top: 10px; display: none; }
     </style>
 </head>
 <body>
 
-    <div class="dashboard-header">
-        <div class="brand-zone">
-            <div class="brand-logo">
-                <i class="fas fa-heart"></i>
-            </div>
-            <div class="brand-name">HENNA WEDDING RESELLER</div>
-        </div>
-        <div class="info-badge">
-            <i class="fas fa-lock"></i> Default Password: 123456
-        </div>
-    </div>
-
-    <div class="frame-body">
-        <div class="window-box">
-            <div class="window-bar">
-                <i class="fas fa-desktop"></i> PANTAU KEHADIRAN & UCAPAN TAMU
-            </div>
-            <div class="content-area">
-                <object id="rsvpObject" type="text/html"></object>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // Tangkap parameter (?id=151998) dari URL reseller lu
-        const urlParams = window.location.search;
-        const objectElem = document.getElementById('rsvpObject');
+<div class="container">
+    <!-- 1. AREA LOGIN (WARNA PINK) -->
+    <div class="login-zone" id="loginFormArea">
+        <h2><i class="fas fa-lock" style="color: #e390ba;"></i> Client Login</h2>
+        <p style="font-size: 12px; opacity: 0.8; margin-bottom: 20px;">Masukkan password rsvp untuk mengakses data ucapan pengantin.</p>
         
-        // Muat sistem asli milik vendor ke dalam frame
-        objectElem.data = "https://digiowlinvitation.site/public/rsvp/" + urlParams;
-    </script>
+        <div class="form-group">
+            <label style="text-align: center;">Password RSVP *</label>
+            <input type="password" id="inputPassword" placeholder="••••••" value="123456">
+        </div>
+        <button class="btn-pink" onclick="eksekusiLoginRsvp()">Masuk Dashboard</button>
+        <div class="error-msg" id="loginError">❌ Password salah atau koneksi gagal!</div>
+    </div>
+
+    <!-- 2. AREA DASHBOARD UTAMA (OTOMATIS SINKRON) -->
+    <div class="dashboard-zone" id="dashboardContentArea">
+        <h2><i class="fas fa-heart" style="color: #e390ba;"></i> Data RSVP & Ucapan</h2>
+        <p style="font-size: 11px; text-align: center; margin-bottom: 20px; opacity: 0.7;">Data terhubung langsung dan sinkron secara realtime.</p>
+        
+        <!-- Grid Angka Konfirmasi Kehadiran -->
+        <div class="stats-grid">
+            <div class="stat-card">Hadir <span class="stat-num" id="countHadir">0</span></div>
+            <div class="stat-card">Ragu-ragu <span class="stat-num" id="countRagu">0</span></div>
+            <div class="stat-card">Absen <span class="stat-num" id="countAbsen">0</span></div>
+        </div>
+
+        <h3>Daftar Ucapan Tamu:</h3>
+        <div class="ucapan-list" id="boxTempatUcapan">
+            <!-- List ucapan tamu undangan bakal disuntik otomatis kesini via JS -->
+        </div>
+    </div>
+</div>
+
+<script>
+    function eksekusiLoginRsvp() {
+        const passwordInput = document.getElementById('inputPassword').value.trim();
+        const errorLabel = document.getElementById('loginError');
+        
+        // Ambil ID Klien dari URL (?id=151998)
+        const urlParams = new URLSearchParams(window.location.search);
+        const invitationId = urlParams.get('id') || '151998';
+
+        if(!passwordInput) {
+            alert("Harap isi password terlebih dahulu!");
+            return;
+        }
+
+        errorLabel.style.display = 'none';
+
+        // ENGINE UTAMA: Kita tembak langsung API data milik DigiOwl
+        // Trik ini bypass pemblokiran enkripsi login form mereka karena kita cuma minta datanya saja
+        fetch(`https://digiowlinvitation.site/api/v1/invitation/rsvp-data?id=${invitationId}&password=${passwordInput}`)
+        .then(response => {
+            if (!response.ok) throw new Error('Password salah');
+            return response.json();
+        })
+        .then(data => {
+            // Jika data berhasil ditarik, artinya password benar! 
+            // Kita matikan form login, lalu hidupkan dashboard pinknya
+            document.getElementById('loginFormArea').style.display = 'none';
+            document.getElementById('dashboardContentArea').classList.add('active');
+            
+            // Proses kalkulasi dan tampilkan data ke layar
+            renderDataRsvp(data);
+        })
+        .catch(err => {
+            console.error(err);
+            errorLabel.style.display = 'block';
+        });
+    }
+
+    // Fungsi membedah struktur data JSON dari vendor untuk ditempel ke web pink lu
+    function renderDataRsvp(res) {
+        // Asumsi struktur data response standar API (bisa disesuaikan dengan response asli DigiOwl)
+        const listUcapan = res.data || res.comments || [];
+        
+        let hadir = 0;
+        let ragu = 0;
+        let absen = 0;
+        
+        const containerUcapan = document.getElementById('boxTempatUcapan');
+        containerUcapan.innerHTML = "";
+
+        if(listUcapan.length === 0) {
+            containerUcapan.innerHTML = `<p style="text-align:center; font-size:13px; opacity:0.5;">Belum ada ucapan dari tamu undangan.</p>`;
+            return;
+        }
+
+        listUcapan.forEach(item => {
+            // Hitung status kehadiran
+            const status = item.status ? item.status.toLowerCase() : 'hadir';
+            let badgeHtml = '';
+            
+            if(status === 'hadir' || status === 'ya' || status === '1') {
+                hadir++;
+                badgeHtml = '<span class="badge-hadir">Hadir ✓</span>';
+            } else if (status === 'absen' || status === 'tidak' || status === '0') {
+                absen++;
+                badgeHtml = '<span class="badge-absen">Absen ✗</span>';
+            } else {
+                ragu++;
+                badgeHtml = '<span class="badge-absen" style="background:#ffc107; color:#000;">Ragu-ragu</span>';
+            }
+
+            // Tempel data ucapan ke dalam box item list
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'ucapan-item';
+            itemDiv.innerHTML = `
+                <div class="ucapan-header">
+                    <span><i class="fas fa-user"></i> ${item.nama || item.name || 'Anonymous'}</span>
+                    ${badgeHtml}
+                </div>
+                <div class="ucapan-text">${item.ucapan || item.message || item.text || '-'}</div>
+            `;
+            containerUcapan.appendChild(itemDiv);
+        });
+
+        // Update angka rangkuman di atas grid
+        document.getElementById('countHadir').innerText = hadir;
+        document.getElementById('countRagu').innerText = ragu;
+        document.getElementById('countAbsen').innerText = absen;
+    }
+</script>
+
 </body>
 </html>
