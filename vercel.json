@@ -2,23 +2,23 @@
   "rewrites": [
     {
       "source": "/rsvp",
-      "destination": "https://digiowlinvitation.site/public/rsvp/"
+      "destination": "https://invie.id/public/rsvp/"
     },
     {
       "source": "/public/rsvp/:path*",
-      "destination": "https://digiowlinvitation.site/public/rsvp/:path*"
+      "destination": "https://invie.id/public/rsvp/:path*"
     },
     {
       "source": "/login",
-      "destination": "https://digiowlinvitation.site/login"
+      "destination": "https://invie.id/login"
     },
     {
       "source": "/auth/:path*",
-      "destination": "https://digiowlinvitation.site/auth/:path*"
+      "destination": "https://invie.id/auth/:path*"
     },
     {
       "source": "/api/:path*",
-      "destination": "https://digiowlinvitation.site/api/:path*"
+      "destination": "https://invie.id/api/:path*"
     }
   ]
 }
