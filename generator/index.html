@@ -4,8 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Generator Nama Tamu Undangan</title>
-    <!-- Library untuk membaca file Excel secara instan di browser -->
+    <!-- Library untuk membaca file Excel -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <!-- Library FontAwesome untuk memunculkan ikon-ikon persis gambar -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: #fddde6; color: #1c2033; margin: 0; padding: 20px; display: flex; justify-content: center; }
@@ -19,12 +21,10 @@
         input[type="text"], textarea { width: 100%; padding: 10px; border: 2px solid #1c2033; border-radius: 8px; font-size: 13px; background: #fff; }
         textarea { height: 100px; resize: none; }
         
-        /* Button Group Pilihan Kata Pengantar */
         .btn-group { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 15px; }
         .btn-option { padding: 6px 12px; background: #fffbf2; border: 2px solid #1c2033; border-radius: 20px; font-size: 12px; font-weight: bold; cursor: pointer; }
         .btn-option.active { background: #e390ba; color: #fff; }
         
-        /* Desain Tombol Import Excel */
         .excel-zone { display: flex; justify-content: flex-end; margin-top: 5px; }
         .btn-excel { background: #ffffff; border: 2px solid #1c2033; border-radius: 6px; padding: 6px 12px; font-size: 11px; font-weight: bold; cursor: pointer; box-shadow: 2px 2px 0px #1c2033; }
         .btn-excel:active { transform: translate(1px, 1px); box-shadow: 0px 0px 0px #1c2033; }
@@ -32,27 +32,38 @@
         .btn-primary { display: block; width: 100%; padding: 14px; background: #0000ff; color: #fff; font-weight: bold; border: 2px solid #1c2033; border-radius: 8px; cursor: pointer; text-transform: uppercase; font-size: 13px; box-shadow: 4px 4px 0 #1c2033; transition: all 0.1s; }
         .btn-primary:active { transform: translate(2px, 2px); box-shadow: 0 0 0 #1c2033; }
         
-        /* Desain Tabel List Hasil Generate */
+        /* Desain Tabel Mirip Gambar Lu */
         .table-container { margin-top: 20px; display: none; }
         .table-container.active { display: block; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
-        th, td { border: 2px solid #1c2033; padding: 10px; text-align: left; }
-        th { background: #e8ebf5; }
-        .action-btns { display: flex; gap: 4px; }
-        .btn-action { padding: 6px 10px; font-size: 11px; font-weight: bold; border: 2px solid #1c2033; border-radius: 4px; cursor: pointer; }
-        .btn-wa { background: #25d366; color: #fff; }
-        .btn-copy { background: #6c757d; color: #fff; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; border: 2px solid #1c2033; border-radius: 12px; overflow: hidden; }
+        th { background: #cbd5e1; color: #1c2033; font-weight: bold; border: 2px solid #1c2033; }
+        th, td { padding: 12px; text-align: left; }
+        td { background: #e2e8f0; border-bottom: 1px solid #cbd5e1; vertical-align: middle; }
+        
+        /* Container Tombol 5 Jari */
+        .action-btns { display: flex; gap: 6px; justify-content: flex-end; align-items: center; }
+        .btn-icon-action { width: 34px; height: 34px; border-radius: 6px; border: none; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; transition: transform 0.1s; }
+        .btn-icon-action:active { transform: scale(0.9); }
+        
+        /* Warna Tombol Sesuai Gambar Lu */
+        .btn-color-wa { background-color: #0f8b4a; }        /* Ijo WA */
+        .btn-color-share { background-color: #5c6bc0; }     /* Ungu/Biru Share */
+        .btn-color-copy-all { background-color: #555555; }  /* Abu Dokumen */
+        .btn-color-copy-link { background-color: #777777; } /* Abu Rantai */
+        .btn-color-delete { background-color: #dc3545; }    /* Merah Tong Sampah */
         
         .global-actions { display: flex; gap: 10px; margin-top: 15px; justify-content: center; }
         .btn-danger { padding: 8px 16px; background: #dc3545; color: #fff; font-weight: bold; border: 2px solid #1c2033; border-radius: 6px; cursor: pointer; font-size: 12px; }
         
         .btn-download { display: inline-flex; align-items: center; justify-content: center; width: 100%; padding: 12px; background: #134e4a; color: #fff; font-weight: bold; border: 2px solid #1c2033; border-radius: 8px; font-size: 12px; text-decoration: none; cursor: pointer; box-shadow: 3px 3px 0 #1c2033; }
+        
+        /* Notifikasi Melayang Pop Up Kecil saat Berhasil Salin */
+        .toast-notif { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #1c2033; color: #fff; padding: 10px 20px; border-radius: 20px; font-size: 12px; font-weight: bold; display: none; z-index: 99999; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <!-- Komponen Info Penting -->
     <div class="card card-pink">
         <h3>PENTING !! MOHON DIBACA DENGAN TELITI.</h3>
         <ul class="info-list">
@@ -62,7 +73,6 @@
         </ul>
     </div>
 
-    <!-- Komponen Form Utama -->
     <div class="card">
         <h3>GENERATOR NAMA TAMU</h3>
         
@@ -99,13 +109,13 @@
         <button class="btn-primary" onclick="prosesDaftarTamu()">👤 Buat Daftar Nama Tamu</button>
     </div>
 
-    <!-- Komponen Tabel List Hasil -->
+    <!-- Tampilan Tabel dengan Struktur Komponen 5 Tombol Pilihan -->
     <div class="card table-container" id="resultTableContainer">
         <table>
             <thead>
                 <tr>
-                    <th>Nama Tamu</th>
-                    <th style="width: 150px; text-align: center;">Pilihan</th>
+                    <th style="padding: 8px 12px;">Nama Tamu</th>
+                    <th style="text-align: right; padding: 8px 12px; width: 220px;">Pilihan</th>
                 </tr>
             </thead>
             <tbody id="tamuTableBody"></tbody>
@@ -116,7 +126,6 @@
         </div>
     </div>
 
-    <!-- Komponen File Excel Unduhan -->
     <div class="card" style="background-color: #f8fafc;">
         <h3>FILE EXCEL UNTUK IMPORT</h3>
         <p style="text-align: left; font-size: 11px; margin-bottom: 12px; opacity: 0.8;">Download dan gunakan file excel berikut jika ingin menggunakan fitur <b>"Import dari File Excel"</b></p>
@@ -124,8 +133,9 @@
     </div>
 </div>
 
+<div class="toast-notif" id="toastBox">Berhasil disalin!</div>
+
 <script>
-    // Database Teks Pengantar Persis Bawaan Vendor
     const templates = {
         formal: "Merupakan suatu kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan untuk hadir dan memberikan doa restu.\n\nTerima Kasih\n\nHormat kami,\n[mempelai]\n\nLink Undangan:\n[link-undangan]",
         muslim: "Assalamu'alaikum Wr. Wb.\n\nTanpa mengurangi rasa hormat, perkenankan kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri acara pernikahan kami.\n\nBerikut link undangan resmi kami:\n[link-undangan]\n\nMerupakan suatu kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir. Terima kasih.\n\nWassalamu'alaikum Wr. Wb.\n\nKami yang berbahagia,\n[mempelai]",
@@ -136,6 +146,7 @@
     };
 
     document.getElementById('templateText').value = templates['formal'];
+    let listTamuGlobal = []; // Array data untuk menampung manipulasi hapus satu baris
 
     function setTemplate(type) {
         const buttons = document.querySelectorAll('#templateGroup .btn-option');
@@ -148,7 +159,6 @@
         document.getElementById('excelFileInput').click();
     }
 
-    // Engine Pembaca Excel Otomatis
     function handleExcelImport(event) {
         const file = event.target.files[0];
         if (!file) return;
@@ -173,7 +183,7 @@
 
             if (namaTamuArray.length > 0) {
                 document.getElementById('listTamuInput').value = namaTamuArray.join('\n');
-                alert(`Berhasil mengimpor ${namaTamuArray.length} nama tamu!`);
+                showToast(`Berhasil mengimpor ${namaTamuArray.length} nama!`);
             } else {
                 alert("File Excel kosong atau format tidak sesuai.");
             }
@@ -190,17 +200,21 @@
         XLSX.writeFile(workbook, "format-data-kontak.xlsx");
     }
 
-    // Engine Utama Penggabung Link Domain Reseller Lu
     function prosesDaftarTamu() {
-        const mempelai = document.getElementById('mempelaiInput').value.trim() || "Aku & Kamu";
         const listTamuRaw = document.getElementById('listTamuInput').value.trim();
-        
         if (!listTamuRaw) {
             alert("Harap isi list nama tamu terlebih dahulu!");
             return;
         }
 
-        const arrayTamu = listTamuRaw.split('\n').map(nama => nama.trim()).filter(nama => nama !== "");
+        // Simpan ke array global agar bisa dihapus satuan
+        listTamuGlobal = listTamuRaw.split('\n').map(nama => nama.trim()).filter(nama => nama !== "");
+        renderTabelTamu();
+    }
+
+    // Fungsi Render Ulang Komponen Tabel Utama beserta 5 Fitur Tombol Pilihan
+    function renderTabelTamu() {
+        const mempelai = document.getElementById('mempelaiInput').value.trim() || "Aku & Kamu";
         const urlParams = new URLSearchParams(window.location.search);
         const invitationId = urlParams.get('id') || 'ovin-sigit';
         const currentDomain = window.location.origin;
@@ -208,10 +222,13 @@
         const tableBody = document.getElementById('tamuTableBody');
         tableBody.innerHTML = ""; 
 
-        arrayTamu.forEach((namaTamu) => {
+        if (listTamuGlobal.length === 0) {
+            document.getElementById('resultTableContainer').classList.remove('active');
+            return;
+        }
+
+        listTamuGlobal.forEach((namaTamu, index) => {
             const encodedName = encodeURIComponent(namaTamu).replace(/%20/g, '+');
-            
-            // LINK SAKTI: Murni nembak ke subfolder domain reseller lu!
             const finalLinkUndangan = `${currentDomain}/${invitationId}?to=${encodedName}`;
 
             let rawMessage = document.getElementById('templateText').value;
@@ -222,10 +239,30 @@
 
             const tr = document.createElement('tr');
             tr.innerHTML = `
-                <td><b>${namaTamu}</b></td>
-                <td class="action-btns" style="text-align: center;">
-                    <button class="btn-action btn-wa" onclick="shareToWA(\`${escapeHtml(finalMessage)}\`)">WA</button>
-                    <button class="btn-action btn-copy" onclick="copyToClipboard(\`${escapeHtml(finalMessage)}\`, this)">Salin</button>
+                <td style="color: #333333;">${namaTamu}</td>
+                <td>
+                    <div class="action-btns">
+                        <!-- 1. Kirim WA -->
+                        <button class="btn-icon-action btn-color-wa" onclick="shareToWA(\`${escapeHtml(finalMessage)}\`)" title="Kirim WA">
+                            <i class="fab fa-whatsapp"></i>
+                        </button>
+                        <!-- 2. Fitur Share Native HP -->
+                        <button class="btn-icon-action btn-color-share" onclick="shareNative(\`${escapeHtml(namaTamu)}\`, \`${escapeHtml(finalMessage)}\`)" title="Share">
+                            <i class="fas fa-share-alt"></i>
+                        </button>
+                        <!-- 3. Salin Ucapan + Link -->
+                        <button class="btn-icon-action btn-color-copy-all" onclick="copyAction(\`${escapeHtml(finalMessage)}\`, 'Ucapan berhasil disalin!')" title="Salin Ucapan">
+                            <i class="far fa-copy"></i>
+                        </button>
+                        <!-- 4. Salin Link Saja -->
+                        <button class="btn-icon-action btn-color-copy-link" onclick="copyAction(\`${escapeHtml(finalLinkUndangan)}\`, 'Link berhasil disalin!')" title="Salin Link">
+                            <i class="fas fa-link"></i>
+                        </button>
+                        <!-- 5. Hapus Baris Satuan -->
+                        <button class="btn-icon-action btn-color-delete" onclick="hapusSatuTamu(${index})" title="Hapus">
+                            <i class="far fa-trash-alt"></i>
+                        </button>
+                    </div>
                 </td>
             `;
             tableBody.appendChild(tr);
@@ -238,24 +275,47 @@
         window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
     }
 
-    function copyToClipboard(text, buttonElement) {
+    // Fitur Share Menggunakan Engine API Bawaan HP Android/iOS
+    function shareNative(nama, text) {
+        if (navigator.share) {
+            navigator.share({
+                title: `Undangan Untuk ${nama}`,
+                text: text
+            }).catch(console.error);
+        } else {
+            // Fallback kalau dibuka di browser jadul desktop yang tidak mendukung share native
+            copyAction(text, "Fitur Share tidak didukung, Ucapan otomatis disalin!");
+        }
+    }
+
+    function copyAction(text, message) {
         navigator.clipboard.writeText(text).then(() => {
-            const originalText = buttonElement.innerText;
-            buttonElement.innerText = "Tersalin!";
-            buttonElement.style.background = "#28a745";
-            setTimeout(() => {
-                buttonElement.innerText = originalText;
-                buttonElement.style.background = "#6c757d";
-            }, 1500);
+            showToast(message);
         });
     }
 
+    // Fungsi Menghapus Satu Baris Sesuai Gambar Lu
+    function hapusSatuTamu(index) {
+        listTamuGlobal.splice(index, 1);
+        // Update isi textarea atas agar sinkron jika di-export lagi
+        document.getElementById('listTamuInput').value = listTamuGlobal.join('\n');
+        renderTabelTamu();
+        showToast("Nama berhasil dihapus dari daftar");
+    }
+
     function hapusSemuaDaftar() {
-        if(confirm("Hapus semua daftar?")) {
+        if(confirm("Apakah Anda yakin ingin menghapus seluruh daftar nama tamu?")) {
+            listTamuGlobal = [];
             document.getElementById('listTamuInput').value = "";
-            document.getElementById('tamuTableBody').innerHTML = "";
-            document.getElementById('resultTableContainer').classList.remove('active');
+            renderTabelTamu();
         }
+    }
+
+    function showToast(msg) {
+        const toast = document.getElementById('toastBox');
+        toast.innerText = msg;
+        toast.style.display = 'block';
+        setTimeout(() => { toast.style.display = 'none'; }, 2000);
     }
 
     function escapeHtml(text) {
