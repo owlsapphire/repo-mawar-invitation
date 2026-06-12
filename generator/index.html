@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Generator Nama Tamu Undangan</title>
+    <!-- Kita panggil library pembaca Excel disini -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <style>
         * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: #fddde6; color: #1c2033; margin: 0; padding: 20px; display: flex; justify-content: center; }
@@ -12,20 +14,25 @@
         .card-pink { background: #fff5f7; }
         h3 { margin-top: 0; color: #1c2033; text-transform: uppercase; font-size: 16px; border-bottom: 2px solid #1c2033; padding-bottom: 8px; }
         .info-list { font-size: 12px; padding-left: 20px; margin: 0; line-height: 1.8; }
-        .form-group { margin-bottom: 15px; }
+        .form-group { margin-bottom: 15px; position: relative; }
         label { display: block; font-weight: bold; margin-bottom: 6px; font-size: 13px; }
         input[type="text"], textarea { width: 100%; padding: 10px; border: 2px solid #1c2033; border-radius: 8px; font-size: 13px; background: #fff; }
         textarea { height: 100px; resize: none; }
         
-        /* Pilihan Teks Pengantar Buttons */
+        /* Tombol Pilihan Teks Pengantar */
         .btn-group { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 15px; }
         .btn-option { padding: 6px 12px; background: #fffbf2; border: 2px solid #1c2033; border-radius: 20px; font-size: 12px; font-weight: bold; cursor: pointer; }
         .btn-option.active { background: #e390ba; color: #fff; }
         
-        .btn-primary { display: block; width: 100%; padding: 12px; background: #0000ff; color: #fff; font-weight: bold; border: 2px solid #1c2033; border-radius: 8px; cursor: pointer; text-transform: uppercase; font-size: 13px; box-shadow: 3px 3px 0 #1c2033; }
+        /* Tombol Import Excel Imut di pojok bawah textarea */
+        .excel-zone { display: flex; justify-content: flex-end; margin-top: 5px; }
+        .btn-excel { background: #f8f9fa; border: 2px solid #1c2033; border-radius: 6px; padding: 4px 10px; font-size: 11px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 4px; }
+        .btn-excel:hover { background: #e9ecef; }
+        
+        .btn-primary { display: block; width: 100%; padding: 12px; background: #0000ff; color: #fff; font-weight: bold; border: 2px solid #1c2033; border-radius: 8px; cursor: pointer; text-transform: uppercase; font-size: 13px; box-shadow: 3px 3px 0 #1c2033; transition: all 0.1s; }
         .btn-primary:active { transform: translate(2px, 2px); box-shadow: 0 0 0 #1c2033; }
         
-        /* Styling Tabel Daftar Tamu */
+        /* Tabel Daftar Tamu */
         .table-container { margin-top: 20px; display: none; }
         .table-container.active { display: block; }
         table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
@@ -38,6 +45,9 @@
         
         .global-actions { display: flex; gap: 10px; margin-top: 15px; justify-content: center; }
         .btn-danger { padding: 8px 16px; background: #dc3545; color: #fff; font-weight: bold; border: 2px solid #1c2033; border-radius: 6px; cursor: pointer; font-size: 12px; }
+        
+        /* Card Download Template */
+        .btn-download { display: inline-flex; align-items: center; justify-content: center; width: 100%; padding: 10px; background: #134e4a; color: #fff; font-weight: bold; border: 2px solid #1c2033; border-radius: 8px; font-size: 12px; text-decoration: none; cursor: pointer; box-shadow: 2px 2px 0 #1c2033; }
     </style>
 </head>
 <body>
@@ -65,6 +75,12 @@
         <div class="form-group">
             <label>List Nama Tamu Undangan (Gunakan baris baru ↵ untuk memisahkan nama)</label>
             <textarea id="listTamuInput" placeholder="Nama Tamu 1&#10;Nama Tamu 2&#10;Nama Tamu 3"></textarea>
+            
+            <!-- FITUR IMPORT EXCEL BUTTON -->
+            <div class="excel-zone">
+                <button class="btn-excel" onclick="triggerExcelUpload()">📁 Import dari File Excel</button>
+                <input type="file" id="excelFileInput" accept=".xlsx, .xls" style="display: none;" onchange="handleExcelImport(event)">
+            </div>
         </div>
         
         <label>Pilihan Teks Pengantar</label>
@@ -95,78 +111,134 @@
                     <th style="width: 140px;">Pilihan</th>
                 </tr>
             </thead>
-            <tbody id="tamuTableBody">
-                <!-- Data baris tamu masuk di sini via JS -->
-            </tbody>
+            <tbody id="tamuTableBody"></tbody>
         </table>
         
         <div class="global-actions">
             <button class="btn-danger" onclick="hapusSemuaDaftar()">🗑️ Hapus Semua Daftar</button>
         </div>
     </div>
+
+    <!-- Card File Excel Untuk Import (Bawah Sendiri) -->
+    <div class="card" style="background-color: #f8fafc;">
+        <h3>FILE EXCEL UNTUK IMPORT</h3>
+        <p style="text-align: left; font-size: 11px; margin-bottom: 12px;">Download dan gunakan file excel berikut jika ingin menggunakan fitur <b>"Import dari File Excel"</b></p>
+        <button class="btn-download" onclick="downloadTemplateExcel()">📥 format-data-kontak.xlsx</button>
+    </div>
 </div>
 
 <script>
-    // Database Template Kata Pengantar Persis Punya Vendor
     const templates = {
         formal: "Merupakan suatu kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan untuk hadir dan memberikan doa restu.\n\nTerima Kasih\n\nHormat kami,\n[mempelai]\n\nLink Undangan:\n[link-undangan]",
-        muslim: "Assalamu'alaikum Wr. Wb.\n\nTanpa mengurangi rasa hormat, perkenankan kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri acara pernikahan kami.\n\nBerikut link undangan resmi kami:\n[link-undangan]\n\nMerupakan suatu kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir. Terima kasih.\n\nWassalamu'alaikum Wr. Wb.\n\nKami yang berbahagia,\n[mempelai]",
+        muslim: "Assalamu'alaikum Wr. Wb.\n\nTanpa magnifying rasa hormat, perkenankan kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri acara pernikahan kami.\n\nBerikut link undangan resmi kami:\n[link-undangan]\n\nMerupakan suatu kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir. Terima kasih.\n\nWassalamu'alaikum Wr. Wb.\n\nKami yang berbahagia,\n[mempelai]",
         nasrani: "Salam sejahtera dalam kasih Tuhan Yesus Kristus.\n\nDengan penuh rasa syukur, kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri ibadah pemberkatan pernikahan kami.\n\nLink Undangan:\n[link-undangan]\n\nAtas kehadiran dan doa restunya kami ucapkan terima kasih.\n\nHormat kami,\n[mempelai]",
         hindu: "Om Swastyastu.\n\nAtas Asung Kertha Wara Nugraha Ida Sang Hyang Widhi Wasa, kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri upacara Pawiwahan kami.\n\nLink Undangan:\n[link-undangan]\n\nOm Shanti Shanti Shanti Om.\n\nKami yang berbahagia,\n[mempelai]",
         khitan: "Assalamu'alaikum Wr. Wb.\n\nDengan memohon rahmat Allah SWT, kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri acara syukuran khitanan putra kami.\n\nLink Undangan:\n[link-undangan]\n\nHormat kami,\n[mempelai]",
         english: "Dear Family & Friends,\n\nTogether with our families, we joyfully invite you to celebrate our wedding day.\n\nWedding Invitation Link:\n[link-undangan]\n\nThank you for your love and support.\n\nWarm regards,\n[mempelai]"
     };
 
-    let currentActiveTemplate = 'formal';
-
-    // Inisialisasi set template awal saat load halaman
     document.getElementById('templateText').value = templates['formal'];
 
     function setTemplate(type) {
-        currentActiveTemplate = type;
-        // Atur status active tombol
         const buttons = document.querySelectorAll('#templateGroup .btn-option');
         buttons.forEach(btn => btn.classList.remove('active'));
         event.target.classList.add('active');
-        
-        // Update isi textarea pengantar
         document.getElementById('templateText').value = templates[type];
     }
 
-    // Fungsi utama memproses text area baris baru menjadi baris tabel list tamu
+    // TRIGGER INPUT EXCEL TERSEMBUNYI
+    function triggerExcelUpload() {
+        document.getElementById('excelFileInput').click();
+    }
+
+    // ENGINE PROSES BACA FILE EXCEL SECARA INSTAN
+    function handleExcelImport(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const data = new Uint8Array(e.target.result);
+            const workbook = XLSX.read(data, { type: 'array' });
+            
+            // Ambil sheet pertama di excel
+            const firstSheetName = workbook.SheetNames[0];
+            const worksheet = workbook.Sheets[firstSheetName];
+            
+            // Ubah sheet jadi format JSON matriks/array
+            const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+            
+            let namaTamuArray = [];
+            
+            jsonData.forEach((row) => {
+                if (row[0]) { // Ambil data dari kolom pertama (Kolom A)
+                    const namaClean = row[0].toString().trim();
+                    if(namaClean.toLowerCase() !== "nama" && namaClean.toLowerCase() !== "nama tamu") { // Skip baris judul header jika ada
+                        namaTamuArray.push(namaClean);
+                    }
+                }
+            });
+
+            if (namaTamuArray.length > 0) {
+                // Masukkan daftar nama tamu dari excel ke dalam Textarea dipisah enter
+                document.getElementById('listTamuInput').value = namaTamuArray.join('\n');
+                alert(`Berhasil mengimpor ${namaTamuArray.length} nama tamu dari Excel!`);
+            } else {
+                alert("File Excel kosong atau format kolom pertama tidak terdeteksi.");
+            }
+        };
+        reader.readAsArrayBuffer(file);
+        // Reset input file biar bisa upload ulang file yang sama kalau mau
+        event.target.value = '';
+    }
+
+    // FITUR GENERATE DARI TEMPLATE EXCEL OTOMATIS JADI FILE SIAP DOWNLOAD
+    function downloadTemplateExcel() {
+        // Buat baris data isi template excel pancingan
+        const data = [
+            ["Nama Tamu"], // Header baris pertama
+            ["Bapak Joko Nugroho & Istri"],
+            ["Siti Rahmawati"],
+            ["Teman-Teman SMA Henna"]
+        ];
+        
+        const worksheet = XLSX.utils.aoa_to_sheet(data);
+        const workbook = XLSX.utils.book_new();
+        XLSX.book_append_sheet(workbook, worksheet, "Data Tamu");
+        
+        // Ekspor paksa jadi file .xlsx ke komputer/HP user
+        XLSX.writeFile(workbook, "format-data-kontak.xlsx");
+    }
+
+    // ENGINE UTAMA MAREPLACE STRING MERACIK TABEL TAMU
     function prosesDaftarTamu() {
         const mempelai = document.getElementById('mempelaiInput').value.trim() || "Aku & Kamu";
         const listTamuRaw = document.getElementById('listTamuInput').value.trim();
         
         if (!listTamuRaw) {
-            alert("Harap isi list nama tamu terlebih dahulu!");
+            alert("Harap isi atau import list nama tamu terlebih dahulu!");
             return;
         }
 
-        // Pecah teks berdasarkan enter/baris baru
         const arrayTamu = listTamuRaw.split('\n').map(nama => nama.trim()).filter(nama => nama !== "");
         
-        // Ambil info link reseller saat ini secara dinamis
         const urlParams = new URLSearchParams(window.location.search);
         const invitationId = urlParams.get('id') || 'ovin-sigit';
         const currentDomain = window.location.origin;
 
         const tableBody = document.getElementById('tamuTableBody');
-        tableBody.innerHTML = ""; // Bersihkan tabel lama
+        tableBody.innerHTML = ""; 
 
         arrayTamu.forEach((namaTamu) => {
-            // Pembuatan Link Undangan per nama tamu
             const encodedName = encodeURIComponent(namaTamu).replace(/%20/g, '+');
             const finalLinkUndangan = `${currentDomain}/${invitationId}?to=${encodedName}`;
 
-            // Racik teks pengantar final khusus untuk nama tamu ini
             let rawMessage = document.getElementById('templateText').value;
             let finalMessage = rawMessage
                 .replaceAll('[mempelai]', mempelai)
                 .replaceAll('[link-undangan]', finalLinkUndangan)
                 .replaceAll('[nama]', namaTamu);
 
-            // Bikin struktur baris tabel HTML
             const tr = document.createElement('tr');
             tr.innerHTML = `
                 <td><b>${namaTamu}</b></td>
@@ -178,13 +250,11 @@
             tableBody.appendChild(tr);
         });
 
-        // Munculkan container tabel hasil
         document.getElementById('resultTableContainer').classList.add('active');
     }
 
     function shareToWA(text) {
-        const urlSafeText = encodeURIComponent(text);
-        window.open(`https://api.whatsapp.com/send?text=${urlSafeText}`, '_blank');
+        window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
     }
 
     function copyToClipboard(text, buttonElement) {
@@ -208,9 +278,7 @@
     }
 
     function escapeHtml(text) {
-        return text
-            .replace(/`/g, "\\`")
-            .replace(/"/g, '\\"');
+        return text.replace(/`/g, "\\`").replace(/"/g, '\\"');
     }
 </script>
 
