@@ -6,50 +6,21 @@
     <title>Generator Nama Tamu</title>
     <style>
         html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background-color: #ffffff; }
-        iframe { width: 100%; height: 100%; border: none; }
+        object { width: 100%; height: 100%; border: none; }
     </style>
 </head>
 <body>
 
-    <!-- Kali ini kita pake iframe dengan ID khusus biar javascript bisa masuk ke dalemnya -->
-    <iframe id="vendorIframe" src="about:blank"></iframe>
+    <!-- Kita balik pake object sakti, tapi ditambahin script oper parameter -->
+    <object id="generatorObject" type="text/html"></object>
 
     <script>
-        // 1. Tangkap parameter dari URL Vercel reseller (misal: ?id=ovin-sigit)
+        // Tangkap parameter (?id=ovin-sigit) dari URL Vercel lu
         const urlParams = window.location.search;
-        const currentResellerDomain = window.location.origin; // Menangkap domain vercel reseller otomatis
+        const objectElem = document.getElementById('generatorObject');
         
-        // Mengambil ID project undangan (misal: ovin-sigit)
-        const params = new URLSearchParams(urlParams);
-        const invitationId = params.get('id') || 'ovin-sigit'; 
-
-        const iframe = document.getElementById('vendorIframe');
-        const targetUrl = "https://digiowlinvitation.site/send/" + urlParams;
-
-        // 2. Ambil data halaman dari vendor secara transparan di belakang layar
-        fetch(targetUrl)
-            .then(response => response.text())
-            .then(html => {
-                // Trik Utama: Ganti teks URL vendor menjadi URL domain Vercel reseller secara paksa!
-                const oldLink = "https://digiowlinvitation.site/" + invitationId;
-                const newLink = currentResellerDomain + "/" + invitationId;
-                
-                // Proses replace teks di dalam codingan HTML vendor sebelum ditampilkan
-                let modifiedHtml = html.replaceAll(oldLink, newLink);
-                
-                // Tambahan: Jaga-jaga kalau teks pengantar atau tombol salin nyangkut, kita paksa ganti semua teks vendor
-                modifiedHtml = modifiedHtml.replaceAll("https://digiowlinvitation.site", currentResellerDomain);
-
-                // 3. Suntikkan HTML yang sudah bersih ke dalam iframe reseller
-                const iframeDoc = iframe.contentWindow.document;
-                iframeDoc.open();
-                iframeDoc.write(modifiedHtml);
-                iframeDoc.close();
-            })
-            .catch(err => {
-                // Jika fetch biasa terhalang CORS security, gunakan fallback langsung ke page awal
-                iframe.src = targetUrl;
-            });
+        // Langsung tembak paksa ke generator vendor lewat object pemicu
+        objectElem.data = "https://digiowlinvitation.site/send/" + urlParams;
     </script>
 </body>
 </html>
