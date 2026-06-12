@@ -1,0 +1,9 @@
+{
+  "redirects": [
+    {
+      "source": "/tiwi-usamah",
+      "destination": "https://digiowlinvitation.site/tiwi-usamah/:path*",
+      "permanent": true
+    }
+  ]
+}
