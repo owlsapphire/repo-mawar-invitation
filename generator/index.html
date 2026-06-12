@@ -5,163 +5,212 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Generator Nama Tamu Undangan</title>
     <style>
-        * {
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #fddde6; /* Warna pink coquette khas brand lu */
-            color: #1c2033;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
-        }
-        .container {
-            background: #ffffff;
-            width: 100%;
-            max-width: 450px;
-            border: 4px solid #1c2033;
-            border-radius: 24px;
-            padding: 30px 24px;
-            box-shadow: 8px 8px 0px #1c2033;
-        }
-        h2 {
-            margin-top: 0;
-            font-size: 22px;
-            text-align: center;
-            color: #1c2033;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        p {
-            font-size: 13px;
-            text-align: center;
-            margin-bottom: 25px;
-            opacity: 0.8;
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        label {
-            display: block;
-            font-weight: bold;
-            margin-bottom: 8px;
-            font-size: 14px;
-        }
-        input[type="text"], textarea {
-            width: 100%;
-            padding: 12px;
-            border: 3px solid #1c2033;
-            border-radius: 12px;
-            font-size: 14px;
-            font-family: inherit;
-            background-color: #fff;
-        }
-        textarea {
-            height: 120px;
-            resize: none;
-        }
-        input:focus, textarea:focus {
-            outline: none;
-            background-color: #fff0f5;
-        }
-        .btn {
-            display: block;
-            width: 100%;
-            padding: 14px;
-            background-color: #e390ba; /* Hot pink cerah */
-            color: #1c2033;
-            font-weight: bold;
-            font-size: 15px;
-            border: 3px solid #1c2033;
-            border-radius: 12px;
-            box-shadow: 4px 4px 0px #1c2033;
-            cursor: pointer;
-            transition: all 0.1s;
-        }
-        .btn:active {
-            transform: translate(3px, 3px);
-            box-shadow: 0px 0px 0px #1c2033;
-        }
-        .result-box {
-            margin-top: 25px;
-            background-color: #f7f9fa;
-            border: 2px dashed #1c2033;
-            border-radius: 12px;
-            padding: 15px;
-            display: none;
-        }
-        .result-box.active {
-            display: block;
-        }
-        .alert-success {
-            color: #28a745;
-            font-size: 12px;
-            font-weight: bold;
-            text-align: center;
-            margin-top: 8px;
-            display: none;
-        }
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #fddde6; color: #1c2033; margin: 0; padding: 20px; display: flex; justify-content: center; }
+        .container { background: #ffffff; width: 100%; max-width: 650px; border: 4px solid #1c2033; border-radius: 24px; padding: 24px; box-shadow: 8px 8px 0px #1c2033; }
+        .card { background: #fff; border: 2px solid #1c2033; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 4px 4px 0px #1c2033; }
+        .card-pink { background: #fff5f7; }
+        h3 { margin-top: 0; color: #1c2033; text-transform: uppercase; font-size: 16px; border-bottom: 2px solid #1c2033; padding-bottom: 8px; }
+        .info-list { font-size: 12px; padding-left: 20px; margin: 0; line-height: 1.8; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-weight: bold; margin-bottom: 6px; font-size: 13px; }
+        input[type="text"], textarea { width: 100%; padding: 10px; border: 2px solid #1c2033; border-radius: 8px; font-size: 13px; background: #fff; }
+        textarea { height: 100px; resize: none; }
+        
+        /* Pilihan Teks Pengantar Buttons */
+        .btn-group { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 15px; }
+        .btn-option { padding: 6px 12px; background: #fffbf2; border: 2px solid #1c2033; border-radius: 20px; font-size: 12px; font-weight: bold; cursor: pointer; }
+        .btn-option.active { background: #e390ba; color: #fff; }
+        
+        .btn-primary { display: block; width: 100%; padding: 12px; background: #0000ff; color: #fff; font-weight: bold; border: 2px solid #1c2033; border-radius: 8px; cursor: pointer; text-transform: uppercase; font-size: 13px; box-shadow: 3px 3px 0 #1c2033; }
+        .btn-primary:active { transform: translate(2px, 2px); box-shadow: 0 0 0 #1c2033; }
+        
+        /* Styling Tabel Daftar Tamu */
+        .table-container { margin-top: 20px; display: none; }
+        .table-container.active { display: block; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
+        th, td { border: 2px solid #1c2033; padding: 10px; text-align: left; }
+        th { background: #e8ebf5; }
+        .action-btns { display: flex; gap: 4px; }
+        .btn-action { padding: 4px 8px; font-size: 11px; font-weight: bold; border: 1px solid #1c2033; border-radius: 4px; cursor: pointer; }
+        .btn-wa { background: #25d366; color: #fff; }
+        .btn-copy { background: #6c757d; color: #fff; }
+        
+        .global-actions { display: flex; gap: 10px; margin-top: 15px; justify-content: center; }
+        .btn-danger { padding: 8px 16px; background: #dc3545; color: #fff; font-weight: bold; border: 2px solid #1c2033; border-radius: 6px; cursor: pointer; font-size: 12px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>Generator Nama Tamu</h2>
-    <p>Bikin link nama tamu undangan otomatis untuk disebar via WhatsApp.</p>
-    
-    <div class="form-group">
-        <label for="tamuInput">Nama Tamu / Kelompok:</label>
-        <input type="text" id="tamuInput" placeholder="Contoh: Budi Nugroho & Pasangan">
+    <!-- Card Info Penting -->
+    <div class="card card-pink">
+        <h3>PENTING !! MOHON DIBACA DENGAN TELITI.</h3>
+        <ul class="info-list">
+            <li>List nama tamu dapat dicicil, dihapus, dan ditambah kapan pun selama masa aktif undangan.</li>
+            <li>Unlimited sebar undangan via <b>Whatsapp, dll</b>.</li>
+            <li>Teks Pengantar dapat di-custom, namun jangan mengedit manual kode <b>[nama]</b>, <b>[link-undangan]</b>, dan <b>[mempelai]</b> karena nanti sudah otomatis.</li>
+        </ul>
     </div>
-    
-    <button class="btn" onclick="generateLink()">✨ Buat & Salin Teks WhatsApp ✨</button>
-    
-    <div class="result-box" id="resultBox">
-        <label>Hasil Teks Kirim WA (Sudah Disalin):</label>
-        <textarea id="resultText" readonly></textarea>
-        <div class="alert-success" id="successLabel">✓ Berhasil disalin ke clipboard!</div>
+
+    <!-- Card Input Generator -->
+    <div class="card">
+        <h3>GENERATOR NAMA TAMU</h3>
+        
+        <div class="form-group">
+            <label>Yang Mengundang *</label>
+            <input type="text" id="mempelaiInput" placeholder="Aku & Kamu">
+        </div>
+        
+        <div class="form-group">
+            <label>List Nama Tamu Undangan (Gunakan baris baru ↵ untuk memisahkan nama)</label>
+            <textarea id="listTamuInput" placeholder="Nama Tamu 1&#10;Nama Tamu 2&#10;Nama Tamu 3"></textarea>
+        </div>
+        
+        <label>Pilihan Teks Pengantar</label>
+        <div class="btn-group" id="templateGroup">
+            <button class="btn-option active" onclick="setTemplate('formal')">Formal</button>
+            <button class="btn-option" onclick="setTemplate('muslim')">Muslim</button>
+            <button class="btn-option" onclick="setTemplate('nasrani')">Nasrani</button>
+            <button class="btn-option" onclick="setTemplate('hindu')">Hindu</button>
+            <button class="btn-option" onclick="setTemplate('khitan')">Khitan</button>
+            <button class="btn-option" onclick="setTemplate('english')">English</button>
+        </div>
+        
+        <div class="form-group">
+            <label>Isi Kata Pengantar</label>
+            <textarea id="templateText" style="height: 140px;"></textarea>
+        </div>
+        
+        <button class="btn-primary" onclick="prosesDaftarTamu()">📱 Buat Daftar Nama Tamu</button>
+    </div>
+
+    <!-- Card Hasil Tabel Daftar Tamu -->
+    <div class="card table-container" id="resultTableContainer">
+        <h3>Daftar Nama Tamu</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nama Tamu</th>
+                    <th style="width: 140px;">Pilihan</th>
+                </tr>
+            </thead>
+            <tbody id="tamuTableBody">
+                <!-- Data baris tamu masuk di sini via JS -->
+            </tbody>
+        </table>
+        
+        <div class="global-actions">
+            <button class="btn-danger" onclick="hapusSemuaDaftar()">🗑️ Hapus Semua Daftar</button>
+        </div>
     </div>
 </div>
 
 <script>
-    function generateLink() {
-        const tamuName = document.getElementById('tamuInput').value.trim();
-        if (!tamuName) {
-            alert('Masukkan nama tamunya dulu ya kak!');
+    // Database Template Kata Pengantar Persis Punya Vendor
+    const templates = {
+        formal: "Merupakan suatu kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan untuk hadir dan memberikan doa restu.\n\nTerima Kasih\n\nHormat kami,\n[mempelai]\n\nLink Undangan:\n[link-undangan]",
+        muslim: "Assalamu'alaikum Wr. Wb.\n\nTanpa mengurangi rasa hormat, perkenankan kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri acara pernikahan kami.\n\nBerikut link undangan resmi kami:\n[link-undangan]\n\nMerupakan suatu kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir. Terima kasih.\n\nWassalamu'alaikum Wr. Wb.\n\nKami yang berbahagia,\n[mempelai]",
+        nasrani: "Salam sejahtera dalam kasih Tuhan Yesus Kristus.\n\nDengan penuh rasa syukur, kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri ibadah pemberkatan pernikahan kami.\n\nLink Undangan:\n[link-undangan]\n\nAtas kehadiran dan doa restunya kami ucapkan terima kasih.\n\nHormat kami,\n[mempelai]",
+        hindu: "Om Swastyastu.\n\nAtas Asung Kertha Wara Nugraha Ida Sang Hyang Widhi Wasa, kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri upacara Pawiwahan kami.\n\nLink Undangan:\n[link-undangan]\n\nOm Shanti Shanti Shanti Om.\n\nKami yang berbahagia,\n[mempelai]",
+        khitan: "Assalamu'alaikum Wr. Wb.\n\nDengan memohon rahmat Allah SWT, kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri acara syukuran khitanan putra kami.\n\nLink Undangan:\n[link-undangan]\n\nHormat kami,\n[mempelai]",
+        english: "Dear Family & Friends,\n\nTogether with our families, we joyfully invite you to celebrate our wedding day.\n\nWedding Invitation Link:\n[link-undangan]\n\nThank you for your love and support.\n\nWarm regards,\n[mempelai]"
+    };
+
+    let currentActiveTemplate = 'formal';
+
+    // Inisialisasi set template awal saat load halaman
+    document.getElementById('templateText').value = templates['formal'];
+
+    function setTemplate(type) {
+        currentActiveTemplate = type;
+        // Atur status active tombol
+        const buttons = document.querySelectorAll('#templateGroup .btn-option');
+        buttons.forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
+        
+        // Update isi textarea pengantar
+        document.getElementById('templateText').value = templates[type];
+    }
+
+    // Fungsi utama memproses text area baris baru menjadi baris tabel list tamu
+    function prosesDaftarTamu() {
+        const mempelai = document.getElementById('mempelaiInput').value.trim() || "Aku & Kamu";
+        const listTamuRaw = document.getElementById('listTamuInput').value.trim();
+        
+        if (!listTamuRaw) {
+            alert("Harap isi list nama tamu terlebih dahulu!");
             return;
         }
 
-        // 1. Ambil ID klien dari URL (?id=ovin-sigit)
-        const params = new URLSearchParams(window.location.search);
-        const invitationId = params.get('id') || 'ovin-sigit';
-
-        // 2. Deteksi domain Vercel reseller secara otomatis
+        // Pecah teks berdasarkan enter/baris baru
+        const arrayTamu = listTamuRaw.split('\n').map(nama => nama.trim()).filter(nama => nama !== "");
+        
+        // Ambil info link reseller saat ini secara dinamis
+        const urlParams = new URLSearchParams(window.location.search);
+        const invitationId = urlParams.get('id') || 'ovin-sigit';
         const currentDomain = window.location.origin;
 
-        // 3. Racik link undangannya murni pake domain reseller lu
-        // Mengubah spasi dan karakter khusus jadi format URL (+ atau %20)
-        const encodedName = encodeURIComponent(tamuName).replace(/%20/g, '+');
-        const finalInvitationLink = `${currentDomain}/${invitationId}?to=${encodedName}`;
+        const tableBody = document.getElementById('tamuTableBody');
+        tableBody.innerHTML = ""; // Bersihkan tabel lama
 
-        // 4. Susun format template pesan WhatsApp-nya
-        const waTemplate = `Tanpa mengurangi rasa hormat, perkenankan kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri acara pernikahan kami.\n\nBerikut link undangan digital resmi kami:\n${finalInvitationLink}\n\nMerupakan suatu kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir. Terima kasih.`;
+        arrayTamu.forEach((namaTamu) => {
+            // Pembuatan Link Undangan per nama tamu
+            const encodedName = encodeURIComponent(namaTamu).replace(/%20/g, '+');
+            const finalLinkUndangan = `${currentDomain}/${invitationId}?to=${encodedName}`;
 
-        // 5. Tampilkan hasilnya ke kotak teks
-        document.getElementById('resultText').value = waTemplate;
-        document.getElementById('resultBox').classList.add('active');
+            // Racik teks pengantar final khusus untuk nama tamu ini
+            let rawMessage = document.getElementById('templateText').value;
+            let finalMessage = rawMessage
+                .replaceAll('[mempelai]', mempelai)
+                .replaceAll('[link-undangan]', finalLinkUndangan)
+                .replaceAll('[nama]', namaTamu);
 
-        // 6. Otomatis salin ke clipboard HP / Laptop user
-        navigator.clipboard.writeText(waTemplate).then(() => {
-            const successLabel = document.getElementById('successLabel');
-            successLabel.style.display = 'block';
-            setTimeout(() => {
-                successLabel.style.display = 'none';
-            }, 3000);
+            // Bikin struktur baris tabel HTML
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td><b>${namaTamu}</b></td>
+                <td class="action-btns">
+                    <button class="btn-action btn-wa" onclick="shareToWA(\`${escapeHtml(finalMessage)}\`)">WA</button>
+                    <button class="btn-action btn-copy" onclick="copyToClipboard(\`${escapeHtml(finalMessage)}\`, this)">Salin</button>
+                </td>
+            `;
+            tableBody.appendChild(tr);
         });
+
+        // Munculkan container tabel hasil
+        document.getElementById('resultTableContainer').classList.add('active');
+    }
+
+    function shareToWA(text) {
+        const urlSafeText = encodeURIComponent(text);
+        window.open(`https://api.whatsapp.com/send?text=${urlSafeText}`, '_blank');
+    }
+
+    function copyToClipboard(text, buttonElement) {
+        navigator.clipboard.writeText(text).then(() => {
+            const originalText = buttonElement.innerText;
+            buttonElement.innerText = "Tersalin! ✓";
+            buttonElement.style.background = "#28a745";
+            setTimeout(() => {
+                buttonElement.innerText = originalText;
+                buttonElement.style.background = "#6c757d";
+            }, 2000);
+        });
+    }
+
+    function hapusSemuaDaftar() {
+        if(confirm("Apakah Anda yakin ingin menghapus semua daftar nama tamu ini?")) {
+            document.getElementById('listTamuInput').value = "";
+            document.getElementById('tamuTableBody').innerHTML = "";
+            document.getElementById('resultTableContainer').classList.remove('active');
+        }
+    }
+
+    function escapeHtml(text) {
+        return text
+            .replace(/`/g, "\\`")
+            .replace(/"/g, '\\"');
     }
 </script>
 
