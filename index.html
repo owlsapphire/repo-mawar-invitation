@@ -2,21 +2,43 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Menuju Undangan...</title>
-    <script>
-        // Mengambil parameter nama tamu (?to=...) dari URL reseller
-        const urlParams = window.location.search;
-        
-        // Link target asli dari vendor lu
-        const targetVendor = "https://digiowlinvitation.site/tiwi-usamah/";
-        
-        // Menggabungkan link vendor dengan nama tamu, lalu otomatis redirect kilat
-        window.location.href = targetVendor + urlParams;
-    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wedding Invitation</title>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #ffffff;
+        }
+        /* Kotak sakti untuk nembus blokir vendor */
+        object {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+    </style>
 </head>
 <body>
-    <p style="text-align: center; font-family: sans-serif; margin-top: 50px; color: #1c2033;">
-        Loading Wedding Invitation...
-    </p>
+
+    <!-- Kita pake tag object sebagai ganti iframe buat ngakalin security vendor -->
+    <object data="https://digiowlinvitation.site/tiwi-usamah/?to=Nama+Tamu" type="text/html">
+        <!-- Backup plan pake proxy gratisan kalau browser client super ketat -->
+        <iframe src="https://images1-focus-opensocial.googleusercontent.com/gadgets/proxy?container=focus&refresh=2592000&url=https://digiowlinvitation.site/tiwi-usamah/?to=Nama+Tamu"></iframe>
+    </object>
+
+    <script>
+        // Otomatis nangkep parameter nama tamu dari domain reseller, lalu dioper ke dalem
+        const urlParams = window.location.search;
+        if (urlParams) {
+            const objectElem = document.querySelector('object');
+            const iframeElem = document.querySelector('iframe');
+            
+            objectElem.data = "https://digiowlinvitation.site/tiwi-usamah/" + urlParams;
+            iframeElem.src = "https://images1-focus-opensocial.googleusercontent.com/gadgets/proxy?container=focus&refresh=2592000&url=https://digiowlinvitation.site/tiwi-usamah/" + urlParams;
+        }
+    </script>
 </body>
 </html>
