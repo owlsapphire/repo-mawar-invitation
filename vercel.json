@@ -3,17 +3,14 @@
     {
       "source": "/rsvp",
       "destination": "https://digiowlinvitation.site/public/rsvp/:query*"
-    }
-  ],
-  "headers": [
+    },
     {
-      "source": "/rsvp",
-      "headers": [
-        {
-          "key": "Content-Security-Policy",
-          "value": "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.digiowlinvitation.site; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;"
-        }
-      ]
+      "source": "/public/rsvp/login",
+      "destination": "https://digiowlinvitation.site/public/rsvp/login"
+    },
+    {
+      "source": "/public/rsvp/auth",
+      "destination": "https://digiowlinvitation.site/public/rsvp/auth"
     }
   ]
 }
