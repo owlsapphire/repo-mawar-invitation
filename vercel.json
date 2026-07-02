@@ -1,12 +1,17 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "rewrites": [
     {
       "source": "/rsvp",
       "destination": "https://invie.id/public/rsvp/"
     },
     {
-      "source": "/public/rsvp/:path*",
+      "source": "/rsvp/:path*",
       "destination": "https://invie.id/public/rsvp/:path*"
+    },
+    {
+      "source": "/:path*",
+      "destination": "https://invie.id/:path*"
     }
   ]
 }
