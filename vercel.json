@@ -7,18 +7,6 @@
     {
       "source": "/public/rsvp/:path*",
       "destination": "https://invie.id/public/rsvp/:path*"
-    },
-    {
-      "source": "/login",
-      "destination": "https://invie.id/login"
-    },
-    {
-      "source": "/auth/:path*",
-      "destination": "https://invie.id/auth/:path*"
-    },
-    {
-      "source": "/api/:path*",
-      "destination": "https://invie.id/api/:path*"
     }
   ]
 }
